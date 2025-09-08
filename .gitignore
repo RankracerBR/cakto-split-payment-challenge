@@ -1,0 +1,7 @@
+# Arquivos Python
+*.pyc
+*.pyo
+__pycache__/
+
+
+venv/
