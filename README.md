@@ -21,6 +21,7 @@ Tópicos:
 **-2**
 - Python(Django, Django Rest)
 - Docker, Docker-Compose
+- PostgreSQL
 - Makefile
 - Swagger
 - Django Prometheus(Lib de terceiros para logs)
