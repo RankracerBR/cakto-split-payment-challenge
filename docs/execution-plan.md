@@ -19,21 +19,28 @@
 
 🚀 Como Executar
 # Via Makefile
+
 make build
+
 make up
 
 ou:
 
 sudo make build
+
 sudo make up
 
 
 Caso precise fazer rebuild:
 
 make rebuild
+
 make up
+
 ou
+
 sudo make rebuild
+
 sudo make up
 
 ⚙️ Variáveis de Ambiente
