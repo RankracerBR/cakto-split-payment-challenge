@@ -1,5 +1,3 @@
-from .models import Order
-
 from django.dispatch import Signal, receiver
 
 
