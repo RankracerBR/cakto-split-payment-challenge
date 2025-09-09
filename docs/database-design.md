@@ -35,8 +35,6 @@ _effective_date_: Timestamp de criação do split_
 
 * 'effective_date' no SplitRule - Registra quando a regra foi criada
 
-* 'created_at' implícito (seria bom adicionar explicitamente na Order)
-
 * Status tracking - Campo de 'status' com histórico de mudanças
 
 ## Performance em consultas frequentes
