@@ -9,13 +9,13 @@ Tópicos:
 * 3- Overview das perguntas feitas no docx
 
 **-1**
-api-specifications[]
+[api-specifications](https://github.com/RankracerBR/cakto-split-payment-challenge/blob/main/docs/api-specification.md)
 
-architecture-decisions[]
+[architecture-decisions](https://github.com/RankracerBR/cakto-split-payment-challenge/blob/main/docs/architecture-desicions.md)
 
-database-design[]
+[database-design](https://github.com/RankracerBR/cakto-split-payment-challenge/blob/main/docs/database-design.md)
 
-execution-plan[]
+[execution-plan](https://github.com/RankracerBR/cakto-split-payment-challenge/blob/main/docs/execution-plan.md)
 
 **-2**
 - Python(Django, Django Rest)
