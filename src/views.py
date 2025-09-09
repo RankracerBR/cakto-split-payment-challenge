@@ -104,7 +104,8 @@ class SplitPaymentView:
                     "recipient_id": rule.recipient_id,
                     "type": rule.type,
                     "value": rule.value,
-                    "account_info": rule.account_info
+                    "account_info": rule.account_info,
+                    "effective_date": rule.effective_date
                 }
                 for rule in order.split_rules.all()
             ]
