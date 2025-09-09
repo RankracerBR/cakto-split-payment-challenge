@@ -14,14 +14,12 @@ _amount: Valor total (Decimal 10,2)_
 
 _stripe_payment_id: ID do pagamento no Stripe_
 
-_created_at: Timestamp de criação_
-
 
 **SplitRule**
 
 _id: PK autoincrement_
 
-_order_id: FK para Order (CASCADE)_
+_order_: FK para Order (CASCADE)_
 
 _recipient_id: Identificador do destinatário_
 
@@ -31,6 +29,7 @@ _value: Valor da divisão (Decimal 10,2)_
 
 _account_info: Informações da conta (JSON)_
 
+_effective_date_: Timestamp de criação do split_
 
 ## Histórico e auditoria de configurações
 

@@ -3,5 +3,5 @@
 *.pyo
 __pycache__/
 
-
+.env
 venv/
