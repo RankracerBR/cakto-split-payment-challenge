@@ -101,7 +101,7 @@ Vantagens do Event Sourcing:
 
 - Histórico imutável de eventos para compliance financeiro
 
-Implementação Sugerida:
+Outro tipo de implementação para o modelo seguindo essa lógica:
 
 ```python
 # Modelagem de eventos financeiros
