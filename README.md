@@ -57,7 +57,7 @@ with transaction.atomic():
     # criação de split rules
 ```
 
-Melhorias Recomendadas:
+Mas existem outras estratégias que podem ser muito bem utilizadas:
 
 - Padrão SAGA para operações distribuídas:
 
