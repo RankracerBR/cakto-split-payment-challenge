@@ -1,12 +1,15 @@
 import stripe
+
 from django.conf import settings
 from django.db import transaction
+
 from .models import Order, SplitRule
 from .events import payment_processed, payment_failed, payout_triggered
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
+# services.py
 class PaymentProcessor:
     CAKTO_RECIPIENT_ID = "cakto_fee_account"
     CAKTO_FEE_PERCENTAGE = 5  # 5%
@@ -14,21 +17,19 @@ class PaymentProcessor:
     def process_payment(self, order_data):
         order = None
         try:
+            # Validação primeiro
+            self._validate_payment(order_data)
+            
+            # Se validação passar, processa o pagamento
             with transaction.atomic():
-                # 1. Create order
                 order = Order.objects.create(
                     product_id=order_data["product_id"],
                     product_name=order_data.get("product_name", ""),
                     amount=order_data.get("amount", 100.00)
                 )
 
-                # 2. Validate payment method
-                self._validate_payment(order_data)
-
-                # 3. Charge via Stripe
                 payment_intent = self._charge_via_stripe(order, order_data)
 
-                # 4. Auto split rules: user + Cakto fee
                 user_percentage = 100 - self.CAKTO_FEE_PERCENTAGE
                 split_rules = [
                     SplitRule.objects.create(
@@ -47,27 +48,51 @@ class PaymentProcessor:
                     )
                 ]
 
-                # 5. Update order
                 order.status = Order.COMPLETED
                 order.stripe_payment_id = payment_intent.id
                 order.save()
 
-                # 6. Trigger events
                 payment_processed.send(sender=self.__class__, order=order)
                 payout_triggered.send(sender=self.__class__, order=order, split_rules=split_rules)
 
                 return order
 
-        except stripe.error.StripeError as e:
-            self._handle_error(order, f"Stripe error: {str(e)}")
         except Exception as e:
-            self._handle_error(order, str(e))
+            if order and order.pk:
+                order.status = Order.FAILED
+                order.save()
+                payment_failed.send(sender=self.__class__, order=order, error=str(e))
+            else:
+                payment_failed.send(sender=self.__class__, order=None, error=str(e))
+
+            raise
 
     def _validate_payment(self, order_data):
+        """Validação rigorosa antes de qualquer operação de banco"""
         if not order_data.get("payment_method_id"):
             raise ValueError("Payment method ID is required")
-        if order_data.get("amount", 0) <= 0:
+        
+        amount = order_data.get("amount")
+        if amount is None:
+            raise ValueError("Amount is required")
+        
+        product_name = order_data.get("product_name")
+        if product_name is None:
+            raise ValueError("Product name is required")
+        
+        try:
+            amount_float = float(amount)
+            if amount_float <= 0:
+                raise ValueError("Amount must be greater than zero")
+        except (ValueError, TypeError):
             raise ValueError("Amount must be greater than zero")
+        
+        # Validar outros campos obrigatórios
+        if not order_data.get("product_id"):
+            raise ValueError("Product ID is required")
+        
+        if not order_data.get("user_id"):
+            raise ValueError("User ID is required")
 
     def _charge_via_stripe(self, order, order_data):
         amount_cents = int(float(order.amount) * 100)
@@ -85,11 +110,15 @@ class PaymentProcessor:
             raise Exception(f"Payment failed with status: {payment_intent.status}")
         return payment_intent
 
-    def _handle_error(self, order, error_message):
+    def _handle_error(self, order, error_message, original_exception=None):
         if order and order.pk:
             order.status = Order.FAILED
             order.save()
             payment_failed.send(sender=self.__class__, order=order, error=error_message)
         else:
             payment_failed.send(sender=self.__class__, order=None, error=error_message)
-        raise Exception(error_message)
+
+        if original_exception and isinstance(original_exception, ValueError):
+            raise ValueError(error_message) from original_exception
+        else:
+            raise Exception(error_message) from original_exception

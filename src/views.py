@@ -1,11 +1,44 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
 from .services import PaymentProcessor
 from .models import Order
 
 
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 100  # Default page size
+    page_size_query_param = 'page_size'
+    max_page_size = 1000  # Maximum limit
+
+
 class SplitPaymentView:
+
+    @swagger_auto_schema(
+        method="post",
+        operation_description="Cria um pagamento com regras de split",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "product_id": openapi.Schema(type=openapi.TYPE_STRING, description="ID do produto"),
+                "product_name": openapi.Schema(type=openapi.TYPE_STRING, description="Nome do produto"),
+                "amount": openapi.Schema(type=openapi.TYPE_NUMBER, description="Valor total do pedido"),
+                "payment_method_id": openapi.Schema(type=openapi.TYPE_STRING, description="Stripe Payment Method ID"),
+                "user_id": openapi.Schema(type=openapi.TYPE_STRING, description="ID do usuário recebedor"),
+                "user_account_info": openapi.Schema(type=openapi.TYPE_OBJECT, description="Dados da conta do usuário"),
+            },
+            required=["product_id", "amount", "payment_method_id", "user_id"],
+        ),
+        responses={
+            201: openapi.Response("Pagamento criado com sucesso"),
+            400: "Erro de validação ou processamento",
+        }
+    )    
+
     @api_view(['POST'])
     def create_split_payment(request):
         try:
@@ -61,8 +94,11 @@ class SplitPaymentView:
     @api_view(['GET'])
     def list_all(request):
         orders = Order.objects.prefetch_related("split_rules").all()
+        paginator = LargeResultsSetPagination()
+        page = paginator.paginate_queryset(orders, request)
+
         data = []
-        for order in orders:
+        for order in page:
             rules_data = [
                 {
                     "recipient_id": rule.recipient_id,
@@ -78,7 +114,6 @@ class SplitPaymentView:
                 "product_name": order.product_name,
                 "status": order.status,
                 "amount": order.amount,
-                "created_at": order.created_at,
                 "split_rules": rules_data
             })
-        return Response(data, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(data)

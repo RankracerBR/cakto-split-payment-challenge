@@ -2,11 +2,30 @@
 
 Tópicos:
 
-1- Especificações das documentações
+* 1 - Especificações das documentações
 
-2- Overview das perguntas feitas no docx
+* 2 - Tecnologias usadas
+
+* 3- Overview das perguntas feitas no docx
+
+**-1**
+api-specifications[]
+
+architecture-decisions[]
+
+database-design[]
+
+execution-plan[]
 
 **-2**
+- Python(Django, Django Rest)
+- Docker, Docker-Compose
+- Makefile
+- Swagger
+- Django Prometheus(Lib de terceiros para logs)
+- Django Log Hub(Lib de terceiros para logs(interface gráfica))
+
+**-3**
 
 ## Microsserviço, módulo monolítico ou arquitetura híbrida?
 
@@ -184,51 +203,6 @@ fi
 # Switch traffic to blue
 switch_traffic blue
 ```
-
-### Ferramentas Recomendadas:
-- Kubernetes para orquestração de containers
-
-- Traefik/Nginx para load balancing inteligente
-
-- Prometheus + Grafana para monitoramento
-
-- Sentry para error tracking
-
-- Redis para feature flags e cache distribuído
-
-
-### Que métricas de monitoramento são críticas?
-
-Status de Pagamentos
-
-- orders_created_total{status="pending|processing|completed|failed"}
-
-- Taxa de sucesso: rate(orders_created_total{status="completed"}[5m])
-
-Performance de Processamento
-
-- payment_processing_duration_seconds (duração das transações)
-
-- stripe_api_latency_seconds (tempo de resposta do Stripe)
-
-Erros e Exceções
-
-- payment_errors_total{error_type="StripeError|ValidationError"}
-
-- database_errors_total (erros de conexão/consulta)
-
-Volume Financeiro
-
-- payment_amount_total (soma dos valores processados)
-
-- split_distribution_percentage (distribuição entre recipients)
-
-Health das Dependências
-
-- stripe_api_available (disponibilidade do Stripe)
-
-- database_connection_active (conexões com PostgreSQL)
-
 
 ## Que métricas de monitoramento são críticas?
 

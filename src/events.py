@@ -1,4 +1,5 @@
 from .models import Order
+
 from django.dispatch import Signal, receiver
 
 
@@ -12,14 +13,13 @@ payout_triggered = Signal()
 def handle_payment_processed(sender, order, **kwargs):
     """Handle successful payment"""
     print(f"Payment processed for order {order.id}")
-    # Update order status, send confirmation, etc.
 
 @receiver(payment_failed)
 def handle_payment_failed(sender, order, error, **kwargs):
-    """Handle failed payment"""
-    print(f"Payment failed for order {order.id}: {error}")
-    order.status = Order.FAILED
-    order.save()
+    if order and hasattr(order, 'id'):
+        print(f"Payment failed for order {order.id}: {error}")
+    else:
+        print(f"Payment failed during creation: {error}")
 
 @receiver(payout_triggered)
 def handle_payout(sender, order, split_rules, **kwargs):
