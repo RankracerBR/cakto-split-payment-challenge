@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import MinValueValidator
 
 
 class Order(models.Model):
@@ -16,8 +15,10 @@ class Order(models.Model):
     ]
     
     product_id = models.CharField(max_length=100)
+    product_name = models.CharField(max_length=250)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    stripe_payment_id = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -35,3 +36,4 @@ class SplitRule(models.Model):
     type = models.CharField(max_length=20, choices=TYPE_CHOICES)
     value = models.DecimalField(max_digits=10, decimal_places=2)
     account_info = models.JSONField(default=dict)
+    effective_date = models.DateTimeField(auto_now_add=True)

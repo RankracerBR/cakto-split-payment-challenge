@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8001 && python manage.py migrate 
+    command: python manage.py runserver 0.0.0.0:8001
     volumes:
       - .:/app
     ports:
