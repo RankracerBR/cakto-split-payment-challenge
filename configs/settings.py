@@ -154,13 +154,13 @@ LOGGING = {
         'info_file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/info.log'),
+            'filename': os.path.join(BASE_DIR, 'log/info.log'),
             'formatter': 'json',
         },
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/error.log'),
+            'filename': os.path.join(BASE_DIR, 'log/error.log'),
             'formatter': 'json',
         },
         'console': {
