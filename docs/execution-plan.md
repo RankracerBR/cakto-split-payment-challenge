@@ -18,6 +18,7 @@
 - Eventos de falha disparados para monitoring
 
 🚀 Como Executar
+
 # Via Makefile
 
 make build
@@ -44,6 +45,7 @@ sudo make rebuild
 sudo make up
 
 ⚙️ Variáveis de Ambiente
+
 DJANGO_SECRET_KEY: Chave secreta do Django(Para gerar a chave: python generate_hash)
                                            
 DJANGO_DEBUG: Modo debug (True/False)
