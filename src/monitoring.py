@@ -6,7 +6,7 @@ def setup_logging():
     logger = logging.getLogger('split_payments')
     
     # Add file handler for compliance logs
-    file_handler = logging.FileHandler('/var/log/split_payments.log')
+    file_handler = logging.FileHandler('log/split_payments.log')
     file_handler.setLevel(logging.INFO)
     
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
