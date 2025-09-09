@@ -277,4 +277,3 @@ class OrderModelTest(TestCase):
         order.save()
         
         self.assertEqual(order.status, Order.COMPLETED)
-

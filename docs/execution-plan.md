@@ -60,6 +60,9 @@ STRIPE_SECRET_KEY: Chave secreta da API Stripe(Chave Teste: 'Enviada pelo email'
 
 STRIPE_PUBLISHABLE_KEY: Chave pública Stripe (Chave Teste: 'Enviada pelo email')
 
+Obs:(Digite o comando cp .env.example .env para copiar as variáveis para o .env)
+    (Ou crie manualmente a pasta e cole as variáveis com as suas respectivas chaves)
+
 ## URLS para documentação
 http://127.0.0.1:8001/swagger/ # Swagger
 
